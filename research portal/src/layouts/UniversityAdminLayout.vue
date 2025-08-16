@@ -69,10 +69,10 @@ const drawer = ref(true)
 const pageTitle = ref("")
 
 const menuItems = [
-  { title: "Dashboard", icon: "mdi-view-dashboard", route: "/dashboard" },
-  { title: "Faculties", icon: "mdi-office-building", route: "/faculty" },
-  { title: "Projects", icon: "mdi-clipboard-list", route: "/projects" },
-  { title: "Funding overview", icon: "mdi-cash", route: "/Funding" },
+  { title: "Dashboard", icon: "mdi-view-dashboard", route: "/university-admin/dashboard" },
+  { title: "Faculties", icon: "mdi-office-building", route: "/university-admin/faculty" },
+  { title: "Projects", icon: "mdi-clipboard-list", route: "/university-admin/projects" },
+  { title: "Funding overview", icon: "mdi-cash", route: "/university-admin/Funding" },
 ]
 
 const handleLogout = () => {
