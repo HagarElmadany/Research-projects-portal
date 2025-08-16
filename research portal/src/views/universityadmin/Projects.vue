@@ -2,55 +2,73 @@
   <v-container fluid>
     <h1 class="mb-4">All Projects</h1>
 
-    <!-- Search and Filter -->
-    <v-row class="mb-4 search-filters" align="center">
-      <v-col cols="12" sm="2">
-        <v-text-field v-model="filters.researcher" label="Researcher name .." density="compact" variant="outlined" hide-details class="white-field"/>
-      </v-col>
+    <!-- Wrapper White Card -->
+    <div class="white-card">
+      <!-- Search and Filter -->
+      <v-row class="mb-4 search-filters" align="center">
+        <v-col cols="12" sm="2">
+          <v-text-field v-model="filters.researcher" label="Researcher name .." density="compact" variant="outlined" hide-details class="white-field"/>
+        </v-col>
 
-      <v-col cols="12" sm="2">
-        <v-text-field v-model="filters.projectTitle" label="Project Title" density="compact" variant="outlined" hide-details class="white-field"/>
-      </v-col>
+        <v-col cols="12" sm="2">
+          <v-text-field v-model="filters.projectTitle" label="Project Title" density="compact" variant="outlined" hide-details class="white-field"/>
+        </v-col>
 
-      <v-col cols="12" sm="2">
-        <v-select v-model="filters.projectSource" :items="sources" label="Project Source" density="compact" variant="outlined" hide-details class="white-field"/>
-      </v-col>
+        <v-col cols="12" sm="2">
+          <v-select v-model="filters.projectSource" :items="sources" label="Project Source" density="compact" variant="outlined" hide-details class="white-field"/>
+        </v-col>
 
-      <v-col cols="12" sm="2">
-        <v-select v-model="filters.status" :items="statusList" label="Project Status" density="compact" variant="outlined" hide-details class="white-field"/>
-      </v-col>
+        <v-col cols="12" sm="2">
+          <v-select v-model="filters.status" :items="statusList" label="Project Status" density="compact" variant="outlined" hide-details class="white-field"/>
+        </v-col>
 
-      <v-col cols="12" sm="2">
-        <v-select v-model="filters.researcherType" :items="researcherTypes" label="Researcher Type" density="compact" variant="outlined" hide-details class="white-field"/>
-      </v-col>
+        <v-col cols="12" sm="2">
+          <v-select v-model="filters.researcherType" :items="researcherTypes" label="Researcher Type" density="compact" variant="outlined" hide-details class="white-field"/>
+        </v-col>
 
-      <v-col cols="12" sm="2">
-        <v-btn class="gradient-btn" block @click="applySearch">
-          <v-icon start>mdi-magnify</v-icon>
-          Search
-        </v-btn>
-      </v-col>
-    </v-row>
+        <v-col cols="12" sm="2">
+          <v-btn class="gradient-btn" block @click="applySearch">
+            <v-icon start>mdi-magnify</v-icon>
+            Search
+          </v-btn>
+        </v-col>
+      </v-row>
 
-    <!-- Projects Table -->
-    <v-data-table :headers="headers" :items="filteredProjects" class="elevation-1 project-table" density="comfortable">
-      <template v-slot:item.actions="{ item }">
-        <v-btn size="small" variant="outlined" color="primary" class="me-1" @click="openDialog(item)">
-          <v-icon start>mdi-pencil</v-icon> Edit
-        </v-btn>
-        <v-btn size="small" variant="outlined" color="error" @click="deleteProject(item)">
-          <v-icon start>mdi-delete</v-icon> Delete
-        </v-btn>
+      <!-- Projects Table -->
+      <v-data-table
+        :headers="headers"
+        :items="filteredProjects"
+        class="elevation-1 striped-table project-table"
+        density="comfortable"
+      
+      >
+
+      <template v-slot:headers="{ columns }">
+        <tr>
+          <th v-for="col in columns" :key="col.value" class="custom-th">
+            {{ col.text }}
+          </th>
+        </tr>
       </template>
-    </v-data-table>
 
-     <!-- Pagination -->
-    <v-pagination
-      v-model="page"
-      :length="pageCount"
-      total-visible="10"
-      class="mt-4"
-    ></v-pagination>
+        <template v-slot:item.actions="{ item }">
+          <v-btn  variant="outlined" size="small" class="action-btn edit-btn me-2" @click="openDialog(item)">
+            <v-icon start>mdi-pencil</v-icon> Edit
+          </v-btn>
+          <v-btn variant="outlined" size="small" class="action-btn delete-btn" @click="deleteProject(item)">
+            <v-icon start>mdi-delete</v-icon> Delete
+          </v-btn>
+        </template>
+      </v-data-table>
+
+      <!-- Pagination -->
+      <v-pagination
+        v-model="page"
+        :length="pageCount"
+        total-visible="10"
+        class="mt-4"
+      ></v-pagination>
+    </div>
 
     <!-- Add Project Button -->
     <div class="text-center mt-4">
@@ -62,84 +80,46 @@
 
     <!-- Dialog -->
     <v-dialog v-model="dialog" max-width="600">
-    <v-card class="dialog-card">
+      <v-card class="dialog-card">
         <v-card-title class="blue--text text-h5 font-weight-bold">
-        {{ isEdit ? 'Edit Project' : 'Add Project' }}
+          {{ isEdit ? 'Edit Project' : 'Add Project' }}
         </v-card-title>
         <v-card-text>
-            <v-row>
+          <v-row>
             <v-col cols="12" sm="6">
-                <v-text-field v-model="form.title" label="Project Title"
-                density="compact"
-                variant="outlined" 
-                class="small-input"/>
+              <v-text-field v-model="form.title" label="Project Title" density="compact" variant="outlined" class="small-input"/>
             </v-col>
             <v-col cols="12" sm="6">
-                <v-text-field v-model="form.researcher" label="Main Researcher" 
-                variant="outlined"
-                density="compact"
-                class="small-input"/>
+              <v-text-field v-model="form.researcher" label="Main Researcher" variant="outlined" density="compact" class="small-input"/>
             </v-col>
             <v-col cols="12" sm="6">
-                <v-select v-model="form.source" :items="sources" label="Funding source" 
-                variant="outlined"
-                density="compact"
-                class="small-input"
-                />
+              <v-select v-model="form.source" :items="sources" label="Funding source" variant="outlined" density="compact" class="small-input"/>
             </v-col>
             <v-col cols="12" sm="6">
-                <v-text-field v-model="form.amount" label="Funding Amount"
-                variant="outlined"
-                density="compact"
-                class="small-input"/>
+              <v-text-field v-model="form.amount" label="Funding Amount" variant="outlined" density="compact" class="small-input"/>
             </v-col>
             <v-col cols="12" sm="6">
-                <v-select v-model="form.status" :items="statusList" label="Status" variant="outlined"
-                density="compact"
-                class="small-input" />
+              <v-select v-model="form.status" :items="statusList" label="Status" variant="outlined" density="compact" class="small-input"/>
             </v-col>
             <v-col cols="12" sm="6">
-                <v-select v-model="form.researcherType" :items="researcherTypes" label="Researcher Type" 
-                variant="outlined"
-                density="compact"
-                class="small-input"/>
+              <v-select v-model="form.researcherType" :items="researcherTypes" label="Researcher Type" variant="outlined" density="compact" class="small-input"/>
             </v-col>
             <v-col cols="12" sm="6">
-                <v-menu
-                    v-model="startDateMenu"
-                    :close-on-content-click="false"
-                    transition="scale-transition"
-                    offset-y
-                    max-width="290px"
-                    min-width="290px"
-                >
-                    <template #activator="{ props }">
-                    <v-text-field
-                        v-bind="props"
-                        v-model="form.start_date"
-                        label="Start Date"
-                        variant="outlined"
-                        density="compact"
-                        readonly
-                        class="small-input"
-                    ></v-text-field>
-                    </template>
-                    <v-date-picker
-                    v-model="form.start_date"
-                    @update:model-value="startDateMenu = false"
-                    ></v-date-picker>
-                </v-menu>
-                </v-col>
-
-            </v-row>
+              <v-menu v-model="startDateMenu" :close-on-content-click="false" transition="scale-transition" offset-y max-width="290px" min-width="290px">
+                <template #activator="{ props }">
+                  <v-text-field v-bind="props" v-model="form.start_date" label="Start Date" variant="outlined" density="compact" readonly class="small-input"></v-text-field>
+                </template>
+                <v-date-picker v-model="form.start_date" @update:model-value="startDateMenu = false"></v-date-picker>
+              </v-menu>
+            </v-col>
+          </v-row>
         </v-card-text>
         <v-card-actions>
-        <v-btn class="cancel-btn" @click="dialog = false">Cancel</v-btn>
-        <v-btn class="gradient-btn" @click="saveProject">Save</v-btn>
+          <v-btn class="cancel-btn" @click="dialog = false">Cancel</v-btn>
+          <v-btn class="gradient-btn" @click="saveProject">Save</v-btn>
         </v-card-actions>
-    </v-card>
+      </v-card>
     </v-dialog>
-
   </v-container>
 </template>
 
@@ -148,20 +128,20 @@ export default {
   name: "Projects",
   data() {
     return {
-        dialog: false,
-        isEdit: false,
-        startDateMenu: false,
-        editIndex: null,
-        itemsPerPage: 5,
-        page: 1,
-        form: {
-            title: "",
-            researcher: "",
-            source: "",
-            amount: "",
-            status: "",
-            researcherType: "",
-            start_date: ""
+      dialog: false,
+      isEdit: false,
+      startDateMenu: false,
+      editIndex: null,
+      itemsPerPage: 5,
+      page: 1,
+      form: {
+        title: "",
+        researcher: "",
+        source: "",
+        amount: "",
+        status: "",
+        researcherType: "",
+        start_date: ""
       },
       filters: {
         researcher: "",
@@ -237,6 +217,36 @@ export default {
 
 <style scoped>
 
+.white-card {
+  background: white;
+  padding: 40px 25px 25px 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+
+}
+
+.v-data-table thead th {
+  background-color: #f1f4f9;
+  font-weight: bold;
+  color: #333;
+  text-align: left;
+}
+
+.project-table {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+
+.gradient-btn {
+  background: linear-gradient(90deg, #396FC8, #37c8b2);
+  color: white !important;
+  font-weight: bold;
+  border-radius: 5px;
+}
+.gradient-btn:hover {
+  opacity: 0.9;
+}
 
 .v-card-title{
     font-weight: bold;
@@ -245,24 +255,41 @@ export default {
     margin: 10px 10px 0 10px;
 }
 .v-card-actions{
-    margin: 0 20px 10px 15px;
+    margin: 0 15px 10px 15px;
 }
-.gradient-btn {
+.cancel-btn {
+  color: #396FC8;
+  border: 1px solid transparent;
+  background: linear-gradient(#fff, #fff) padding-box,
+              linear-gradient(90deg, #396FC8, #37c8b2) border-box;
+}
+
+.action-btn {
+  border-radius: 20px;  
+  font-weight: 600;
+  text-transform: none;
+  padding: 4px 12px;
+  transition: 0.3s ease;
+}
+
+.edit-btn {
+  color: #396FC8;
+  border: 1px solid #396FC8;
+  background: #f5f9ff;
+}
+.edit-btn:hover {
   background: linear-gradient(90deg, #396FC8, #37c8b2);
   color: white !important;
-  font-weight: bold;
-  border-radius: 8px;
 }
 
-.cancel-btn {
- color: #396FC8;
-    border: 1px solid transparent;
-    background:
-    linear-gradient(#fff, #fff) padding-box,
-    linear-gradient(90deg, #396FC8, #37c8b2) border-box;
+.delete-btn {
+  color: #e63946;
+  border: 1px solid #e63946;
+  background: #fff5f5;
+  margin-left: 6px;
 }
-
-
-
+.delete-btn:hover {
+  background: linear-gradient(90deg, #e63946, #ff7b7b);
+  color: white !important;
+}
 </style>
-

@@ -2,12 +2,11 @@
   <v-app>
     <!-- Sidebar -->
     <v-navigation-drawer app v-model="drawer" width="260">
-      <v-list nav>
-        <v-list-item>
-          <img src="@/assets/logo.png" alt="Logo" class="logo" />
-        </v-list-item>
-        <v-divider></v-divider>
+      <img src="@/assets/logo.png" alt="Logo" class="logo" />
 
+       <v-divider></v-divider>
+
+      <v-list nav>
         <v-list-item
           v-for="item in menuItems"
           :key="item.title"
@@ -83,12 +82,13 @@ const handleLogout = () => {
 </script>
 
 <style scoped>
-.logo {
-  width: 200px;
-  height: auto;
-  margin-top: 15px;
-  margin-bottom: 40px;
-}
+  .logo {
+    width: 200px;
+    height: auto;
+    margin: 20px auto 40px auto; 
+    display: block;
+  }
+
 
 .menu-item {
   display: flex;
@@ -106,6 +106,16 @@ const handleLogout = () => {
   color: #396FC8; 
 }
 
+.v-navigation-drawer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;     
+  position: fixed; 
+  top: 0;
+  left: 0;
+}
+
+
 .v-navigation-drawer .v-list-item:hover {
   background-color: #def0f2; 
   font-weight: bold;
@@ -120,11 +130,7 @@ const handleLogout = () => {
   background-color: #396FC8; 
 }
 
-.v-navigation-drawer {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
+
 
 .profileimage{
   font-size: 40px;

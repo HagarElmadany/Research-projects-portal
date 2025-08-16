@@ -11,54 +11,63 @@
         </v-btn>
     </v-row>
 
-
+  <v-card class="table-card">
+  <v-card-text>
     <!-- Search -->
-        <v-text-field
-        v-model="search"
-        prepend-inner-icon="mdi-magnify"
-        label="Search projects ,faculty....."
-        variant="outlined"
-        flat
-        hide-details
-        single-line
-        density="compact"
-        class="mb-4 search-input"
-        ></v-text-field>
-
-
+    <v-text-field
+      v-model="search"
+      label="Search projects ,faculty....."
+      variant="outlined"
+      flat
+      hide-details
+      single-line
+      density="compact"
+      class="mb-4 search-input mx-auto"
+    >
+      <template v-slot:prepend-inner>
+        <v-icon class="gradient-icon">mdi-magnify</v-icon>
+      </template>
+    </v-text-field>
 
     <!-- Table -->
     <v-data-table
-    :headers="headers"
-    :items="paginatedItems"
-    :items-per-page="itemsPerPage"
-    class="elevation-1 striped-table"
+      :headers="headers"
+      :items="paginatedItems"
+      :items-per-page="itemsPerPage"
+      class="elevation-1 striped-table custom-table"
     >
-    <template v-slot:item.departments="{ item }">
+      <template v-slot:headers="{ columns }">
+        <tr>
+          <th v-for="col in columns" :key="col.value" class="custom-th">
+            {{ col.text }}
+          </th>
+        </tr>
+      </template>
+
+      <template v-slot:item.departments="{ item }">
         <div>
-        <v-chip
+          <v-chip
             v-for="(dep, i) in item.departments"
             :key="i"
             class="ma-1"
             :color="i % 2 === 0 ? 'secondary' : 'orange'"
             small
-        >
+          >
             {{ dep }}
-        </v-chip>
+          </v-chip>
         </div>
-    </template>
+      </template>
 
-    <template v-slot:item.actions="{ item }">
-        <v-btn small color="primary" @click="openDialog(item)">
+   <template v-slot:item.actions="{ item }">
+      <v-btn class="action-btn edit-btn" @click="openDialog(item)" size="small" variant="outlined">
         <v-icon start>mdi-pencil</v-icon>Edit
-        </v-btn>
-        <v-btn small color="error" class="ml-2" @click="deleteFaculty(item)">
+      </v-btn>
+      <v-btn class="action-btn delete-btn" @click="deleteFaculty(item)" size="small" variant="outlined">
         <v-icon start>mdi-delete</v-icon>Delete
-        </v-btn>
+      </v-btn>
     </template>
+
     </v-data-table>
-
-
 
     <!-- Pagination -->
     <v-pagination
@@ -67,6 +76,9 @@
       total-visible="10"
       class="mt-4"
     ></v-pagination>
+  </v-card-text>
+</v-card>
+
 
     <!-- Dialog -->
     <v-dialog v-model="showDialog" max-width="600">
@@ -260,13 +272,14 @@ export default {
 <style scoped>
 
 .v-data-table tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #f1f4f9;
 }
 
 .v-data-table thead th {
   background-color: #f1f4f9;
   font-weight: bold;
   color: #333;
+  text-align: left;
 }
 
 .gradient-btn {
@@ -279,7 +292,9 @@ export default {
 }
 
 .search-input {
-  margin-top: 50px ;
+  margin-top: 10px ;
+  width: 100%;
+
 }
 .search-input .v-field {
   background-color: white !important;
@@ -309,6 +324,66 @@ export default {
 }
 .v-card-actions{
     margin: 0 15px 10px 15px;
+}
+
+
+.table-card {
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+  margin-top: 30px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.search-input .v-field {
+  background-color: #fff !important;
+  border: 1px solid #ccc !important; 
+  border-radius: 10px;
+}
+
+/* search icon */
+.gradient-icon {
+  background: linear-gradient(90deg, #396FC8, #37c8b2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: 20px;
+}
+
+.custom-table {
+  border-radius: 10px;
+  overflow: hidden; 
+  
+}
+
+
+
+.action-btn {
+  border-radius: 20px;  
+  font-weight: 600;
+  text-transform: none;
+  padding: 4px 12px;
+  transition: 0.3s ease;
+}
+
+.edit-btn {
+  color: #396FC8;
+  border: 1px solid #396FC8;
+  background: #f5f9ff;
+}
+.edit-btn:hover {
+  background: linear-gradient(90deg, #396FC8, #37c8b2);
+  color: white !important;
+}
+
+.delete-btn {
+  color: #e63946;
+  border: 1px solid #e63946;
+  background: #fff5f5;
+  margin-left: 6px;
+}
+.delete-btn:hover {
+  background: linear-gradient(90deg, #e63946, #ff7b7b);
+  color: white !important;
 }
 
 
